@@ -1,0 +1,19 @@
+#端口
+server:
+  port: 8080
+#当前服务的名称
+spring:
+  application:
+    name: consumer-service
+#注册中心地址
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+
+# 租约续约间隔时间，默认30秒
+eureka.instance.lease-renewal-interval-in-seconds: 30
+# 每隔多久获取服务中心列表，(只读备份)
+eureka.client.registry-fetch-interval-seconds: 30
+# 租约到期，服务时效时间，默认值90秒
+eureka.instance.lease-expiration-duration-in-seconds: 90
