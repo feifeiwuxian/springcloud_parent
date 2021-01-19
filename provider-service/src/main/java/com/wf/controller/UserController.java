@@ -19,7 +19,12 @@ public class UserController {
      * 根据Id查询
      */
     @RequestMapping("/findById")
-    public User findById(Integer id) {
+    public User findById(Integer id) throws InterruptedException {
+        Thread.sleep(3000);
+        // 手动抛出异常
+        if (id ==1) {
+            throw new RuntimeException("啊，服务挂掉了");
+        }
         User user = userservice.findById(id);
         user.setNote("当前服务端口：" + port);
         return user;

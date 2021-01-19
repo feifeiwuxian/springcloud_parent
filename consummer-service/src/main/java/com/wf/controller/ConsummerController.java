@@ -1,5 +1,6 @@
 package com.wf.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.wf.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@DefaultProperties(defaultFallback = "defaultFallBackMethod") // 全局服务降级
 public class ConsummerController {
 
     @Autowired
@@ -51,8 +53,10 @@ public class ConsummerController {
     }
 
     @RequestMapping("/rebbonconsumer/{id}")
-    @HystrixCommand(fallbackMethod = "rebbonFindByIdFallBack")
-    public User rebbonFindById(@PathVariable("id") Integer id) {
+//    @HystrixCommand(fallbackMethod = "rebbonFindByIdFallBack") //每个单独定义熔断方法
+    @HystrixCommand
+    public User rebbonFindById(@PathVariable("id") Integer id) throws InterruptedException {
+
         // 负载均衡
         String url = "http://user-service/user/findById?id=" + id;
         User user = restTemplate.getForObject(url, User.class);
@@ -65,6 +69,15 @@ public class ConsummerController {
     public User rebbonFindByIdFallBack(Integer id) {
         User user = new User();
         user.setUsername("您好，非常抱歉，您访问的用户信息不存在");
+        return user;
+    }
+
+    /**
+     * 全局熔断方法
+     */
+    public User defaultFallBackMethod() {
+        User user = new User();
+        user.setUsername("全局默认降级方法：您好，您访问的数据不存在");
         return user;
     }
 
