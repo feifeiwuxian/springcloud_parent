@@ -1,0 +1,27 @@
+#配置注册中心
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+
+#配置网关整合
+spring:
+  cloud:
+    config:
+      discovery:
+        #配置中心服务的名称
+        service-id: config-server
+        #是否开启配置中心微服务支持
+        enabled: true
+        # {application}-{profile}.yml == user-dev.yml
+      #配置文件名称
+      name: user
+        #配置文件的环境
+      profile: dev
+        #当前配置文件的分支
+      label: master
+  rabbitmq:
+    host: 49.234.8.74
+    port: 5672
+    username: guest
+    password: guest
